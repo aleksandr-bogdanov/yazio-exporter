@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Environments
+.venv/
+.Python
+.env
+
+# Testing
+.pytest_cache/
+.ruff_cache/
+
+# AutoForge / Playwright (build scaffolding, not part of this project)
+.autoforge/
+.playwright/
+.playwright-cli/
+
+# Output data (user-generated)
+token.txt
+*.db
+output/
+days.json
+weight.json
+nutrients.json
+products.json
+profile.json
+summary.json
+
+# IDE
+.idea/
+.vscode/

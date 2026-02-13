@@ -1,0 +1,68 @@
+# =============================================================================
+# yazio-exporter Publish to PyPI
+# =============================================================================
+#
+# Triggers when a GitHub release is published (which creates a git tag).
+# Uses PyPI Trusted Publishing (OIDC) — no API tokens needed.
+#
+# Prerequisites (one-time):
+#   1. Create GitHub environment "pypi" (done via gh api or repo settings)
+#   2. Register Trusted Publisher on https://pypi.org/manage/account/publishing/
+#
+# Jobs:
+#   1. build  - Build sdist + wheel            ┐
+#   2. publish - Upload to PyPI via OIDC        ┘ sequential
+# =============================================================================
+
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Build: produce sdist and wheel
+  # ---------------------------------------------------------------------------
+  build:
+    name: Build distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.13
+
+      - name: Build sdist and wheel
+        run: uv build
+
+      - name: Upload distribution artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  # ---------------------------------------------------------------------------
+  # Publish: upload to PyPI using Trusted Publishing (OIDC)
+  # ---------------------------------------------------------------------------
+  publish:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - name: Download distribution artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

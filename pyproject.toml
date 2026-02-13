@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "yazio-exporter"
+version = "0.2.0"
+description = "Export your Yazio nutrition diary to JSON, CSV, or SQLite"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+    {name = "Alexander Bogdanov"},
+]
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "requests>=2.31.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/aleksandr-bogdanov/yazio-exporter"
+Repository = "https://github.com/aleksandr-bogdanov/yazio-exporter"
+Issues = "https://github.com/aleksandr-bogdanov/yazio-exporter/issues"
+
+[project.scripts]
+yazio-exporter = "yazio_exporter.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0",
+    "responses>=0.23.0",
+    "ruff>=0.8.0",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
